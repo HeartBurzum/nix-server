@@ -1,4 +1,7 @@
 {blocklist-path, config, ...}:
+let
+  local-ip = "192.168.3.2";
+in
 {
   services.coredns = {
     enable = true;
@@ -11,10 +14,10 @@
           block
         }
         hosts {
-          192.168.3.2 lab.home.lan
-          192.168.3.2 status.home.lan
-          192.168.3.2 search.home.lan
-          192.168.3.2 sync.home.lan
+          ${local-ip} lab.home.lan
+          ${local-ip} status.home.lan
+          ${local-ip} search.home.lan
+          ${local-ip} sync.home.lan
           192.168.1.73 desktop.home.lan
         }
       }
