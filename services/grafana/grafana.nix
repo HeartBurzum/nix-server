@@ -7,6 +7,7 @@
     settings = {
       server = {
         domain = "status.home.lan";
+        enforce_domain = true;
         http_addr = "127.0.0.1";
         http_port = 2342; 
       };
