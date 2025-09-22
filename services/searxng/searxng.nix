@@ -23,7 +23,7 @@ in
 #    environmentFile = "${config.sops.templates."searx.env".path}";
     uwsgiConfig = {
       socket = "/run/searx/searx.sock";
-      http = ":8888";
+      http = "127.0.0.1:8888";
       chmod-socket = "660";
     };
 
