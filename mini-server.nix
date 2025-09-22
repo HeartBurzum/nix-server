@@ -23,7 +23,16 @@ rec {
   sops.age.generateKey = true;
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
-  services.mysql.package = pkgs.mariadb;
+  services.mysql = {
+    package = pkgs.mariadb;
+    settings = {
+      mysqld = {
+        bind-address = "127.0.0.1";
+        port = 3306;
+        datadir = "/var/lib/mysql";
+      };
+    };
+  };
 
   services.firefox-syncserver = {
     enable = true;
