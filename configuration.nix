@@ -14,6 +14,8 @@
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  environment.memoryAllocator.provider = "graphene-hardened-light";
+
   sops.secrets."login/pastmaster/password" = {
     neededForUsers = true;
   };
