@@ -47,6 +47,39 @@
       "vm.mmap_rnd_bits" = "32"; # increase the amount of bits used for ASLR randomization
       "vm.mmap_rnd_compat_bits" = "16"; # increase the amount of bits used for ASL randomization for compatibility mode
       "vm.unprivileged_userfaultfd" = "0"; # default in nixos, restrict page fault handling in user space
+
+      # networking
+      "net.ipv4.ip_forward" = "0"; # disable packet forwarding on all ipv4 interfaces
+      "net.ipv4.conf.all.forwarding" = "0"; # ""
+      "net.ipv4.conf.default.forwarding" = "0"; # ""
+      "net.ipv4.conf.all.accept_redirects" = "0"; # ignore icmp redirects
+      "net.ipv4.conf.default.accept_redirects" = "0"; # ""
+      "net.ipv4.conf.all.send_redirects" = "0"; # dont send icmp redirects
+      "net.ipv4.conf.default.send_redirects" = "0"; # ""
+      "net.ipv4.conf.all.secure_redirects" = "1"; # only accept icmp redirects from listed gateways
+      "net.ipv4.conf.default.secure_redirects" = "1"; # ""
+      "net.ipv4.conf.all.accept_source_route" = "0"; # disable SSR
+      "net.ipv4.conf.default.accept_source_route" = "0"; # ""
+      "net.ipv4.conf.all.rp_filter" = "1"; # strict reverse path
+      "net.ipv4.conf.default.rp_filter" = "1"; # ""
+      "net.ipv4.tcp_dsack" = "0"; # disable duplicate sacks
+      "net.ipv4.tcp_rfc1337" = "0"; # disable rfc1337 compliance
+      "net.ipv4.tcp_sack" = "0"; # disable select acks
+      "net.ipv4.tcp_syncookies" = "1"; # syn flood protection
+      "net.ipv4.icmp_ignore_bogus_error_responses" = "1"; # ignore bad icmp responses
+      "net.ipv4.conf.all.log_martians" = "1"; # log incorrect destination packets
+      "net.ipv4.conf.default.log_martians" = "1"; # ""
+      "net.ipv4.conf.all.arp_announce" = "2"; # always use best local address
+      "net.ipv4.conf.default.arp_announce" = "2"; # ""
+      "net.ipv4.conf.all.arp_ignore" = "1"; # only reply to arp requests if target is local
+      "net.ipv4.conf.default.arp_ignore" = "1"; # ""
+      "net.ipv4.conf.all.drop_gratuitous_arp" = "1"; # drop all extra arp frames
+      "net.ipv4.conf.default.drop_gratuitous_arp" = "1"; # ""
+      "net.ipv4.icmp_echo_ignore_broadcasts" = "1"; # ignore icmp multicast
+      # disable ipv6 network stack
+      "net.ipv6.conf.all.disable_ipv6" = "1";
+      "net.ipv6.conf.default.disable_ipv6" = "1";
+      "net.ipv6.conf.lo.disable_ipv6" = "1";
     };
   };
 
