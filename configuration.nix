@@ -16,6 +16,26 @@
 
   environment.memoryAllocator.provider = "graphene-hardened-light";
 
+  boot.kernel.sysctl = {
+    "fs.binfmt_misc.status" = "0"; # disable arbitrary binary register execution
+    "kernel.core_pattern" = "|/bin/false"; # disable writing core dumps
+    "kernel.dmesg_restrict" = "1"; # default value in nixos, disable dmesg for users without CAP_SYSLOG
+    "kernel.io_uring_disabled" = "2"; # disable io_uring for all processes
+    "kernel.kexec_load_disabled" = "1"; # disable kexec after boot
+    "kernel.kptr_restrict" = "2"; # disable leaking kernel memory addresses
+    "kernel.perf_cpu_time_max_percent" = "1"; # throttle cpu perf sampling to 1% of cpu
+    "kernel.perf_event_paranoid" = "2"; # default value in nixos, disable kernel profiling without CAP_PERFMON
+    "kernel.printk" = "3 3 1 3"; # only log error or higher kernel messages
+    "kernel.randomize_va_space" = "2"; # default value in nixos, enable ASLR
+    "kernel.sysrq" = "0"; # disable magic keys
+    "kernel.unprivileged_bpf_disabled" = "2"; # default value in nixos, disable unprivileged bpf usage
+    "vm.max_map_count" = "1048576"; # default value in nixos but recommended for graphene-hardened
+    "vm.mmap_min_addr" = "65536"; # disable mmap calls into lower addresses
+    "vm.mmap_rnd_bits" = "32"; # increase the amount of bits used for ASLR randomization
+    "vm.mmap_rnd_compat_bits" = "16"; # increase the amount of bits used for ASL randomization for compatibility mode
+    "vm.unprivileged_userfaultfd" = "0"; # default in nixos, restrict page fault handling in user space
+  };
+
   sops.secrets."login/pastmaster/password" = {
     neededForUsers = true;
   };
