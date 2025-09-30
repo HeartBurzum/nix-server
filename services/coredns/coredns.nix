@@ -29,7 +29,7 @@ in
           block
         }
         hosts {
-          192.168.3.2 zzz3past.myftp.org
+          ${local-ip} zzz3past.myftp.org
         }
       }
 
