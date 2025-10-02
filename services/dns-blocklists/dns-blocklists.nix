@@ -1,7 +1,7 @@
 {pkgs, fetchFromGitHub, ...}:
 pkgs.stdenv.mkDerivation rec {
   pname = "dns-blocklists";
-  version = "37512025.271.76637";
+  version = "37512025.275.426";
 
   src = fetchFromGitHub {
     owner = "hagezi";
