@@ -12,6 +12,10 @@
   security.lockKernelModules = true; # disable loading kernel modules after boot
 
   boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
     kernelPackages = pkgs.linuxPackages_latest; # use latest kernel
     blacklistedKernelModules = [
       "ax25"
@@ -38,10 +42,6 @@
       "sysv"
       "ufs"
     ];
-    loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
-    };
     kernelParams = [
       "slab_nomerge" # dont merge slabs of similar size
       "init_on_alloc=1" # zero out allocated pages
