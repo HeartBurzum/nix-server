@@ -7,16 +7,41 @@
       ./disk-config.nix
     ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # Use latest kernel.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   environment.memoryAllocator.provider = "graphene-hardened-light";
 
+  security.lockKernelModules = true; # disable loading kernel modules after boot
+
   boot = {
+    kernelPackages = pkgs.linuxPackages_latest; # use latest kernel
+    blacklistedKernelModules = [
+      "ax25"
+      "netrom"
+      "rose"
+      "adfs"
+      "affs"
+      "bfs"
+      "befs"
+      "cramfs"
+      "efs"
+      "erofs"
+      "exofs"
+      "freevxfs"
+      "f2fs"
+      "hfs"
+      "hpfs"
+      "jfs"
+      "minix"
+      "nilfs2"
+      "omfs"
+      "qnx4"
+      "qnx6"
+      "sysv"
+      "ufs"
+    ];
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
     kernelParams = [
       "slab_nomerge" # dont merge slabs of similar size
       "init_on_alloc=1" # zero out allocated pages
