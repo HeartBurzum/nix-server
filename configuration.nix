@@ -108,6 +108,8 @@
     };
   };
 
+  zramSwap.enable = true;
+
   sops.secrets."login/pastmaster/password" = {
     neededForUsers = true;
   };
