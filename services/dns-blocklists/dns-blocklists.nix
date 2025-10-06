@@ -7,7 +7,7 @@ pkgs.stdenv.mkDerivation rec {
     owner = "hagezi";
     repo = "dns-blocklists";
     rev = "${version}";
-    sha256 = "sha256-TAlWhSyDUYmG0SXYvtjGtwIoPrse2YHd8raOFTa6jIQ=";
+    sha256 = "sha256-WTigzVMbNh/JphbqqBIJ3wkan8cPYhfWr9mGngSiXA0=";
   };
 
   installPhase = ''
