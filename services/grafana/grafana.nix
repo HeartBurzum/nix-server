@@ -30,6 +30,9 @@
   };
 
   services.nginx.virtualHosts.${config.services.grafana.domain} = {
+    forceSSL = true;
+    sslCertificate = "/etc/ssl/certs/home.lan.cert.pem";
+    sslCertificateKey = config.sops.secrets."nginx/private_key".path;
     locations."/" = {
       proxyPass = "http://127.0.0.1:${toString config.services.grafana.port}";
       proxyWebsockets = true;

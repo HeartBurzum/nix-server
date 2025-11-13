@@ -60,6 +60,9 @@ in
   services.nginx = {    
     virtualHosts = {
       "search.home.lan" = {
+        sslCertificate = "/etc/ssl/certs/home.lan.cert.pem";
+        sslCertificateKey = config.sops.secrets."nginx/private_key".path;
+        forceSSL = true;
         locations = {
           "/" = {
             extraConfig = ''

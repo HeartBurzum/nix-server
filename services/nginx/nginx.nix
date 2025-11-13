@@ -1,4 +1,20 @@
+{config, ...}:
+let
+  publicKey = builtins.readFile ./home.lan.cert.pem;
+in
 {
+  environment.etc = {
+    "ssl/certs/home.lan.cert.pem" = {
+      text = ''${publicKey}'';
+      mode = "0444";
+    };
+  };
+
+  sops.secrets."nginx/private_key" = {
+    owner = config.users.users.nginx.name;
+    group = config.users.users.nginx.group;
+  };
+
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;

@@ -12,6 +12,7 @@ rec {
     ./services/nginx/nginx.nix
     ./services/searxng/searxng.nix
     ./services/grafana/grafana.nix
+    ./services/firefox-syncserver/firefox-syncserver.nix
   ];
 
   networking.hostName = "lab";
@@ -33,22 +34,4 @@ rec {
       };
     };
   };
-
-  services.firefox-syncserver = {
-    enable = true;
-    singleNode = {
-      enable = true;
-#      enableTLS = true;
-      enableNginx = true;
-      hostname = "sync.home.lan";
-      url = "http://sync.home.lan:80";
-    };
-    secrets = config.sops.templates."firefox-syncserver".path;
-  };
-
-  sops.secrets."firefox-sync/master_secret" = { };
-  sops.templates."firefox-syncserver".content = ''
-      SYNC_MASTER_SECRET=${config.sops.placeholder."firefox-sync/master_secret"}
-  '';
-
 }
