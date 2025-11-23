@@ -18,6 +18,7 @@ in
           ${local-ip} status.home.lan
           ${local-ip} search.home.lan
           ${local-ip} sync.home.lan
+          192.168.1.1 fw1.home.lan
           192.168.1.73 desktop.home.lan
         }
       }
