@@ -1,6 +1,7 @@
-{config, lib, ...}:
+{config, lib, pkgs, ...}:
 let
   env_path = "/var/lib/searx";
+  redis = (pkgs.redis.override { useSystemJemalloc = false; });
 in
 {
   sops.secrets."searxng/SEARXNG_SECRET" = { 
@@ -18,8 +19,8 @@ in
 
   services.searx = {
     enable = true;
-    redisCreateLocally = true;
-    runInUwsgi = true;
+#    redisCreateLocally = true; # crashes with hardened_alloc from using jemalloc, we compile our own redis package
+    configureUwsgi = true;
 #    environmentFile = "${config.sops.templates."searx.env".path}";
     uwsgiConfig = {
       socket = "/run/searx/searx.sock";
@@ -36,7 +37,7 @@ in
         port = 8888;
         bind_address = "127.0.0.1";
         secret_key = "a";
-        limiter = false;
+        limiter = true;
         public_instance = false;
         image_proxy = true;
         method = "GET";
@@ -50,6 +51,35 @@ in
       };
       search = {
         formats = ["html" "json"];
+      };
+      valkey = {
+        url = "unix://${config.services.redis.servers.searx.unixSocket}";
+      };
+    };
+    limiterSettings = {
+      botdetection = {
+        #x_for = 1;
+        ipv4_prefix = 24;
+        trusted_proxies = [
+          "127.0.0.1/32"
+        ];
+        iplimit = {
+          link_token = true;
+        };
+      };
+      botdetection.ip_lists.pass_ip = [
+        "192.168.0.0/24"
+      ];
+    };
+  };
+
+  services.redis = {
+    package = redis;
+    servers = {
+      searx = {
+        enable = true;
+        user = "searx";
+        port = 0;
       };
     };
   };
