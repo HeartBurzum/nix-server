@@ -13,6 +13,7 @@ rec {
     ./services/searxng/searxng.nix
     ./services/grafana/grafana.nix
     ./services/firefox-syncserver/firefox-syncserver.nix
+    ./services/immich/immich.nix
   ];
 
   networking.hostName = "lab";

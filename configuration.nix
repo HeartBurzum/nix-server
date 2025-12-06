@@ -152,6 +152,8 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYua/Gy35BUTAarK2SYZgtXltumon1zPtqvRN2pjhrM pastmaster@pastmaster-desktop"
   ];
 
+  # Changing system.stateVersion is not recommended, it is set to the initial state of the
+  # config creation version.
   system.stateVersion = "25.05"; # Did you read the comment?
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];

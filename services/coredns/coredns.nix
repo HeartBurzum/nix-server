@@ -15,6 +15,7 @@ in
         }
         hosts {
           ${local-ip} lab.home.lan
+          ${local-ip} photos.home.lan
           ${local-ip} status.home.lan
           ${local-ip} search.home.lan
           ${local-ip} sync.home.lan
