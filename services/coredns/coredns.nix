@@ -14,6 +14,9 @@ in
           block
         }
         hosts {
+          ${local-ip} cloud.home.lan
+          ${local-ip} collabora.home.lan
+          ${local-ip} wopiserver.home.lan
           ${local-ip} lab.home.lan
           ${local-ip} photos.home.lan
           ${local-ip} status.home.lan

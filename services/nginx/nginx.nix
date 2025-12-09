@@ -3,6 +3,10 @@ let
   publicKey = builtins.readFile ./home.lan.cert.pem;
 in
 {
+  security.pki.certificateFiles = [
+    ./lab-ca-chain.cert.pem
+  ];
+
   environment.etc = {
     "ssl/certs/home.lan.cert.pem" = {
       text = ''${publicKey}'';

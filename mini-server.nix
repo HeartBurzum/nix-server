@@ -14,6 +14,7 @@ rec {
     ./services/grafana/grafana.nix
     ./services/firefox-syncserver/firefox-syncserver.nix
     ./services/immich/immich.nix
+    ./services/opencloud/opencloud.nix
   ];
 
   networking.hostName = "lab";
