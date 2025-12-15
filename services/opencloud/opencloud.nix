@@ -4,9 +4,11 @@ environment = {
       INSECURE = "true";
       PROXY_TLS = "false";
       OC_DOMAIN = "cloud.home.lan";
+      OC_URL = "https://cloud.home.lan";
       OC_INSECURE = "false";
       # TODO: Sops
       OC_JWT_SECRET = "testvalue";
+      OC_CORS_ALLOW_ORIGINS = "[https://cloud.home.lan]";
       PROXY_LOG_LEVEL = "warn";
       PROXY_CSP_CONFIG_FILE_LOCATION = "/etc/opencloud/csp.yaml";
       COLLABORA_DOMAIN = "collabora.home.lan";
@@ -63,6 +65,7 @@ in
       script-src = [
         "'self'"
         "'unsafe-inline'"
+        "'unsafe-eval'"
       ];
       style-src = [
         "'self'"
@@ -100,7 +103,16 @@ in
       logging.level = "trace";
       storage.wopi.host = "https://wopiserver.home.lan:443";
       net.content_security_policy = "media-src 'self' blob: https://collabora.home.lan; frame-ancestors cloud.home.lan collabora.home.lan wopiserver.home.lan; object-src 'self'; style-src 'self'; script-src 'self' 'unsafe-eval'; frame-ancestors cloud.home.lan collabora.home.lan.* wopiserver.home.lan.*; img-src 'self' data: https://www.collaboraoffice.com cloud.home.lan collabora.home.lan.* wopiserver.home.lan.*; connect-src 'self' wss://collabora.home.lan https://collabora.home.lan; frame-src 'self'; font-src 'self'; default-src 'none';";
+#      languagetool.enabled = true;
+#      languagetool.base_url = "http://127.0.0.1:8081/v2";
+#      languagetool.ssl_verification = false;
     };
+  };
+  networking.firewall.allowedTCPPorts = [ 8081 ];
+  services.languagetool = {
+    enable = true;
+    public = true;
+    allowOrigin = "*";
   };
 
   services.radicale = {
