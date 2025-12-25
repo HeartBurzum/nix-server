@@ -1,37 +1,42 @@
-{config, lib, pkgs, ...}:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
-environment = {
-      INSECURE = "true";
-      PROXY_TLS = "false";
-      OC_DOMAIN = "cloud.home.lan";
-      OC_URL = "https://cloud.home.lan";
-      OC_INSECURE = "false";
-      # TODO: Sops
-      OC_JWT_SECRET = "testvalue";
-      OC_CORS_ALLOW_ORIGINS = "[https://cloud.home.lan]";
-      PROXY_LOG_LEVEL = "warn";
-      PROXY_CSP_CONFIG_FILE_LOCATION = "/etc/opencloud/csp.yaml";
-      COLLABORA_DOMAIN = "collabora.home.lan";
-      COLLABORATION_APP_PRODUCT = "Collabora";
-      COLLABORATION_APP_NAME = "CollaboraOnline";
-      # TODO: Sops
-      COLLABORATION_WOPI_SECRET = "testvalue";
-      COLLABORATION_WOPI_SRC = "https://wopiserver.home.lan";
-      COLLABORATION_APP_INSECURE = "true";
-      COLLABORATION_APP_ADDR = "https://collabora.home.lan";
-      COLLABORATION_LOG_LEVEL = "trace";
-};
+  environment = {
+    INSECURE = "true";
+    PROXY_TLS = "false";
+    OC_DOMAIN = "cloud.home.lan";
+    OC_URL = "https://cloud.home.lan";
+    OC_INSECURE = "false";
+    OC_CORS_ALLOW_ORIGINS = "[https://cloud.home.lan]";
+    PROXY_LOG_LEVEL = "warn";
+    PROXY_CSP_CONFIG_FILE_LOCATION = "/etc/opencloud/csp.yaml";
+    COLLABORA_DOMAIN = "collabora.home.lan";
+    COLLABORATION_APP_PRODUCT = "Collabora";
+    COLLABORATION_APP_NAME = "CollaboraOnline";
+    COLLABORATION_WOPI_SRC = "https://wopiserver.home.lan";
+    COLLABORATION_APP_INSECURE = "true";
+    COLLABORATION_APP_ADDR = "https://collabora.home.lan";
+    COLLABORATION_LOG_LEVEL = "trace";
+  };
 
-collabora2504 = pkgs.callPackage ./collabora-online-package.nix { };
-oc4 = pkgs.callPackage ./opencloud-package.nix { };
+  oc4 = pkgs.callPackage ./opencloud-package.nix { };
 in
 {
+  sops.secrets."opencloud/.env" = {
+    owner = config.services.opencloud.user;
+  };
+
   services.opencloud = {
     enable = true;
     package = oc4;
     address = "127.0.0.1";
     url = "https://cloud.home.lan";
     inherit environment;
+    environmentFile = "/run/secrets/opencloud/.env";
     settings.csp.directives = {
       child-src = [ "'self'" ];
       connect-src = [
@@ -41,7 +46,12 @@ in
       ];
       default-src = [ "'none'" ];
       font-src = [ "'self'" ];
-      frame-ancestors = [ "'self'" ];
+      frame-ancestors = [
+        "'self'"
+        "https://cloud.home.lan"
+        "https://collabora.home.lan"
+        "https://wopiserver.home.lan"
+      ];
       frame-src = [
         "'self'"
         "blob:"
@@ -72,7 +82,7 @@ in
         "'unsafe-inline'"
       ];
     };
-    settings.proxy = builtins.fromJSON(builtins.readFile ./proxy_settings.json);
+    settings.proxy = builtins.fromJSON (builtins.readFile ./proxy_settings.json);
   };
 
   systemd.services.opencloud-collaboration = {
@@ -92,27 +102,56 @@ in
     };
   };
 
-  services.collabora-online = {
+  virtualisation.containers.enable = true;
+
+  users.groups."cool" = { };
+  users.users."cool" = {
     enable = true;
-    package = collabora2504;
-    settings = {
-      net.proto = "IPv4";
-      net.listen = "loopback";
-      ssl.enable = false;
-      ssl.termination = true;
-      logging.level = "trace";
-      storage.wopi.host = "https://wopiserver.home.lan:443";
-      net.content_security_policy = "media-src 'self' blob: https://collabora.home.lan; frame-ancestors cloud.home.lan collabora.home.lan wopiserver.home.lan; object-src 'self'; style-src 'self'; script-src 'self' 'unsafe-eval'; frame-ancestors cloud.home.lan collabora.home.lan.* wopiserver.home.lan.*; img-src 'self' data: https://www.collaboraoffice.com cloud.home.lan collabora.home.lan.* wopiserver.home.lan.*; connect-src 'self' wss://collabora.home.lan https://collabora.home.lan; frame-src 'self'; font-src 'self'; default-src 'none';";
-#      languagetool.enabled = true;
-#      languagetool.base_url = "http://127.0.0.1:8081/v2";
-#      languagetool.ssl_verification = false;
+    group = "cool";
+    isSystemUser = true;
+  };
+
+  sops.secrets."collabora/proof_key" = {
+    owner = "cool";
+    path = "/etc/coolwsd/proof_key";
+    mode = "0444";
+  };
+
+  environment.etc = {
+    "coolwsd/coolwsd.xml" = {
+      text = builtins.readFile ./coolwsd.xml;
+      mode = "0644";
+    };
+    "coolwsd/proof_key.pub" = {
+      text = builtins.readFile ./proof_key.pub;
+      mode = "0644";
     };
   };
-  networking.firewall.allowedTCPPorts = [ 8081 ];
-  services.languagetool = {
-    enable = true;
-    public = true;
-    allowOrigin = "*";
+
+  virtualisation.oci-containers.containers = {
+    collabora-online = {
+      image = "collabora/code:25.04.7.1.1";
+      ports = [ "127.0.0.1:9980:9980" ];
+      volumes = [
+        "/etc/coolwsd/:/etc/coolwsd"
+        "/run/secrets/collabora/:/run/secrets/collabora"
+      ];
+      serviceName = "podman-codewsd";
+      privileged = true;
+      autoStart = true;
+      autoRemoveOnStop = false;
+      extraOptions = [
+        "--restart=always"
+        "--cap-drop=ALL"
+      ];
+      environment = {
+        extra_params = "--o:net.proto=IPV4 --o:net.listen=0.0.0.0 --o:ssl.enable=false --o:ssl.termination=true --o:logging.level=trace --o:storage.wopi.host=https://wopiserver.home.lan:443";
+      };
+      capabilities = {
+        SYS_CHROOT = true;
+        SYS_ADMIN = true;
+      };
+    };
   };
 
   services.radicale = {
@@ -197,7 +236,7 @@ in
             proxyPass = "http://127.0.0.1:9980";
             recommendedProxySettings = false;
             recommendedUwsgiSettings = false;
-            extraConfig = ''   
+            extraConfig = ''
               proxy_set_header Host $host;
             '';
           };
