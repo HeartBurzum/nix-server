@@ -1,11 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./disk-config.nix
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./disk-config.nix
+  ];
 
   environment.memoryAllocator.provider = "graphene-hardened-light";
 
@@ -122,28 +127,27 @@
     extraPackages = with pkgs; [
       intel-media-driver
       intel-vaapi-driver # previously vaapiIntel
-#      vaapiVdpau
+      # vaapiVdpau
       libva-vdpau-driver
       libvdpau-va-gl
       intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
       vpl-gpu-rt # QSV on 11th gen or newer
-#      intel-media-sdk # QSV up to 11th gen
+      # intel-media-sdk # QSV up to 11th gen
     ];
   };
-  
 
   # Configure keymap in X11
   services.xserver.xkb.layout = "us";
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.pastmaster = {
-     isNormalUser = true;
-     extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
-     hashedPasswordFile = config.sops.secrets."login/pastmaster/password".path;
-     packages = with pkgs; [
-       tree
-     ];
-   };
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+    hashedPasswordFile = config.sops.secrets."login/pastmaster/password".path;
+    packages = with pkgs; [
+      tree
+    ];
+  };
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
@@ -156,6 +160,8 @@
   # config creation version.
   system.stateVersion = "25.05"; # Did you read the comment?
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 }
-
