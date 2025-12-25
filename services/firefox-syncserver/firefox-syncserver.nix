@@ -1,7 +1,11 @@
-{config, ...}:
+{config, pkgs, ...}:
+let
+syncstorage-rs = pkgs.callPackage ./syncstorage-package.nix { };
+in
 {
   services.firefox-syncserver = {
     enable = true;
+    package = syncstorage-rs;
     singleNode = {
       enable = true;
       url = "https://sync.home.lan:443";
