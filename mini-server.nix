@@ -1,4 +1,4 @@
-{pkgs, config, ...}:
+{ pkgs, config, ... }:
 let
   dns-blocklists = pkgs.callPackage ./services/dns-blocklists/dns-blocklists.nix { inherit pkgs; };
 in
@@ -8,17 +8,21 @@ rec {
   ];
 
   imports = [
-    (import ./services/coredns/coredns.nix { blocklist-path = dns-blocklists; inherit config; })
+    (import ./services/coredns/coredns.nix {
+      blocklist-path = dns-blocklists;
+      inherit config;
+    })
     ./services/nginx/nginx.nix
     ./services/searxng/searxng.nix
     ./services/grafana/grafana.nix
     ./services/firefox-syncserver/firefox-syncserver.nix
     ./services/immich/immich.nix
     ./services/opencloud/opencloud.nix
+    ./services/simple_backup/simple_backup.nix
   ];
 
   networking.hostName = "lab";
-#  networking.domain = "home.lan";
+  #  networking.domain = "home.lan";
 
   sops.defaultSopsFile = ./secrets/secrets.yaml;
   sops.defaultSopsFormat = "yaml";
