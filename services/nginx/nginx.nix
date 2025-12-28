@@ -1,6 +1,7 @@
-{config, ...}:
+{ config, ... }:
 let
   publicKey = builtins.readFile ./home.lan.cert.pem;
+  publicKeyBundle = builtins.readFile ./lab.home.lan.bundle.pem;
 in
 {
   security.pki.certificateFiles = [
@@ -8,8 +9,13 @@ in
   ];
 
   environment.etc = {
+
     "ssl/certs/home.lan.cert.pem" = {
       text = ''${publicKey}'';
+      mode = "0444";
+    };
+    "ssl/certs/lab.home.lan.bundle.pem" = {
+      text = ''${publicKeyBundle}'';
       mode = "0444";
     };
   };
@@ -35,16 +41,19 @@ in
             extraConfig = ''
               default_type text/html;
             '';
-#            extraConfig = ''   
-#              uwsgi_pass unix:${config.services.searx.uwsgiConfig.socket};
-#            '';
+            #            extraConfig = ''
+            #              uwsgi_pass unix:${config.services.searx.uwsgiConfig.socket};
+            #            '';
           };
         };
       };
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 
   security.acme = {
     acceptTerms = true;

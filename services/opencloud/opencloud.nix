@@ -130,7 +130,7 @@ in
 
   virtualisation.oci-containers.containers = {
     collabora-online = {
-      image = "collabora/code:25.04.7.1.1";
+      image = "collabora/code:25.04.7.3.1";
       ports = [ "127.0.0.1:9980:9980" ];
       volumes = [
         "/etc/coolwsd/:/etc/coolwsd"
@@ -145,7 +145,7 @@ in
         "--cap-drop=ALL"
       ];
       environment = {
-        extra_params = "--o:net.proto=IPV4 --o:net.listen=0.0.0.0 --o:ssl.enable=false --o:ssl.termination=true --o:logging.level=trace --o:storage.wopi.host=https://wopiserver.home.lan:443";
+        extra_params = "--o:net.proto=IPV4 --o:net.listen=0.0.0.0 --o:ssl.enable=false --o:ssl.termination=true --o:logging.level=trace --o:storage.wopi.host=https://wopiserver.home.lan";
       };
       capabilities = {
         SYS_CHROOT = true;
@@ -276,7 +276,7 @@ in
         };
       };
       "wopiserver.home.lan" = {
-        sslCertificate = "/etc/ssl/certs/home.lan.cert.pem";
+        sslCertificate = "/etc/ssl/certs/lab.home.lan.bundle.pem";
         sslCertificateKey = config.sops.secrets."nginx/private_key".path;
         forceSSL = true;
         locations = {

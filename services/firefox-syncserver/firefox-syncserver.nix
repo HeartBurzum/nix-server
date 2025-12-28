@@ -1,6 +1,6 @@
-{config, pkgs, ...}:
+{ config, pkgs, ... }:
 let
-syncstorage-rs = pkgs.callPackage ./syncstorage-package.nix { };
+  syncstorage-rs = pkgs.callPackage ./syncstorage-package.nix { };
 in
 {
   services.firefox-syncserver = {
@@ -31,6 +31,6 @@ in
 
   sops.secrets."firefox-sync/master_secret" = { };
   sops.templates."firefox-syncserver".content = ''
-      SYNC_MASTER_SECRET=${config.sops.placeholder."firefox-sync/master_secret"}
+    SYNC_MASTER_SECRET=${config.sops.placeholder."firefox-sync/master_secret"}
   '';
 }
