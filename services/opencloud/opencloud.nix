@@ -145,7 +145,7 @@ in
         "--cap-drop=ALL"
       ];
       environment = {
-        extra_params = "--o:net.proto=IPV4 --o:net.listen=0.0.0.0 --o:ssl.enable=false --o:ssl.termination=true --o:logging.level=trace --o:storage.wopi.host=https://wopiserver.home.lan";
+        extra_params = "--o:net.proto=IPV4 --o:net.listen=0.0.0.0 --o:ssl.enable=false --o:ssl.termination=true --o:logging.level=warning --o:storage.wopi.host=https://wopiserver.home.lan";
       };
       capabilities = {
         SYS_CHROOT = true;
