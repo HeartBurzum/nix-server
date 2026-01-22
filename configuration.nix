@@ -154,7 +154,7 @@
 
   users.users.root.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFYua/Gy35BUTAarK2SYZgtXltumon1zPtqvRN2pjhrM pastmaster@pastmaster-desktop"
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH5Xw5caw/GYAKDaQpCnKCjdCaoT9Ykg9p/M2DHF7Q9d pastmaster@pastmaster-thinkp15"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILXJ6BJcKWjmnhksb7CcksDDEHNFGuqFU+8u5Ct54MiP pastmaster@pastmaster-thinkp15"
   ];
 
   # Changing system.stateVersion is not recommended, it is set to the initial state of the
