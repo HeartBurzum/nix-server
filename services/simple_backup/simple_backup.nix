@@ -17,12 +17,14 @@ let
           external = [
             "systemd-cat"
             "mount"
+            "exfat"
           ];
         };
         keep = [
           "${pkgs.coreutils}/bin/mkdir"
           "${pkgs.util-linux}/bin/mount"
           "${pkgs.util-linux}/bin/umount"
+          "${pkgs.exfat}/bin/mount.exfat"
         ];
       }
       ''
@@ -31,8 +33,8 @@ let
 
         id
         groups
-        ${pkgs.coreutils}/bin/mkdir -p /run/media
-        ${pkgs.util-linux}/bin/mount -v /dev/disk/by-uuid/D5C0-E830 /run/media/D5C0-E830
+        ${pkgs.coreutils}/bin/mkdir -p /run/media/4F5A-9FDF
+        ${pkgs.exfat}/bin/mount.exfat -v /dev/disk/by-uuid/4F5A-9FDF /run/media/4F5A-9FDF
       '';
 
   usbBackupCopyScript =
@@ -59,7 +61,7 @@ let
         name=$(basename "$0")
         exec > >(systemd-cat -t "$name" -p info ) 2> >(systemd-cat -t "$name" -p err )
 
-        MOUNTDIR=/run/media/D5C0-E830
+        MOUNTDIR=/run/media/4F5A-9FDF
 
         if ! [[ -d "$MOUNTDIR" ]]; then
           exit 5
