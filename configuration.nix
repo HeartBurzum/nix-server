@@ -22,6 +22,9 @@
       efi.canTouchEfiVariables = true;
     };
     kernelPackages = pkgs.linuxPackages_latest; # use latest kernel
+    kernelModules = [
+      "exfat"
+    ];
     blacklistedKernelModules = [
       "ax25"
       "netrom"
