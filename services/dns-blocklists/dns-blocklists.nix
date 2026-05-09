@@ -1,13 +1,13 @@
 { pkgs, fetchFromGitHub, ... }:
 pkgs.stdenv.mkDerivation rec {
   pname = "dns-blocklists";
-  version = "37522026.117.56379";
+  version = "37522026.128.71279";
 
   src = fetchFromGitHub {
     owner = "hagezi";
     repo = "dns-blocklists";
     rev = "${version}";
-    sha256 = "sha256-CWRnF9PoAsrxN6koVrp+Lt4pPnJLucukgi323UgG1Mc=";
+    sha256 = "sha256-AACOrvO00bbX3XcyGyhhEkW2JZn3JpK0eWsEEOVH7VY=";
   };
 
   installPhase = ''
