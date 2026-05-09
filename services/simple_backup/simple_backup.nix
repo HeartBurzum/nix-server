@@ -74,6 +74,11 @@ let
       '';
 in
 {
+  boot.kernelModules = [
+    "uas" # Needed to mount usb storage
+    "usb_storage" # Needed to mount usb storage devices
+  ];
+
   environment.systemPackages = [
     simple_backup
   ];
